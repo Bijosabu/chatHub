@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:litehub/core/constants/constants.dart';
 import 'package:litehub/model/LoginServices/login_services.dart';
 import 'package:litehub/view/widgets/main_button.dart';
 import 'package:litehub/view/widgets/main_text_field.dart';
+import 'package:connectivity/connectivity.dart';
+
+final _loginServices = LoginServices();
 
 class LoginPage extends StatelessWidget {
   final Function()? onTap;
@@ -10,10 +15,29 @@ class LoginPage extends StatelessWidget {
     super.key,
     required this.onTap,
   });
+  final _loginServices = LoginServices();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    void signIn(BuildContext context) async {
+      final currentContext = context;
+      try {
+        var connectivityResult = await (Connectivity().checkConnectivity());
+        if (connectivityResult == ConnectivityResult.none) {
+          _loginServices.loginUser(
+              currentContext, _emailController.text, _pwdController.text);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No internet connection')));
+        }
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+
     return Scaffold(
         backgroundColor: Colors.grey[200],
         body: SafeArea(
@@ -40,11 +64,9 @@ class LoginPage extends StatelessWidget {
               kHeight30,
               MainButton(
                 onTap: () {
-                  LoginServices().loginUser(
-                    context,
-                    _emailController.text,
-                    _pwdController.text,
-                  );
+                  signIn(context);
+                  // _emailController.dispose();
+                  // _pwdController.dispose();
                 },
                 buttonText: 'Sign in',
               ),

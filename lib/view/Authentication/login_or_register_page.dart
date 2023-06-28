@@ -9,12 +9,16 @@ class LoginOrRegister extends StatelessWidget {
   final toggleController = Get.put(ToggleScreen());
   @override
   Widget build(BuildContext context) {
-    if (toggleController.showLoginPage.value) {
-      return LoginPage(
-        onTap: toggleController.toggleScreen,
-      );
-    } else {
-      return RegisterPage(onTap: toggleController.toggleScreen);
-    }
+    return Obx(() {
+      if (toggleController.showLoginPage.value) {
+        return LoginPage(
+          onTap: toggleController.toggleScreen,
+        );
+      } else {
+        return RegisterPage(
+          onTap: toggleController.toggleScreen,
+        );
+      }
+    });
   }
 }
