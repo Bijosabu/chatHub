@@ -13,7 +13,7 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _loginServices = LoginServices();
+    final loginServices = LoginServices();
     return Scaffold(
         backgroundColor: Colors.grey[200],
         body: SafeArea(
@@ -45,7 +45,7 @@ class RegisterPage extends StatelessWidget {
               kHeight30,
               MainButton(
                 onTap: () {
-                  _loginServices.signUpUser(context, _emailController.text,
+                  loginServices.signUpUser(context, _emailController.text,
                       _pwdController.text, _confirmPwdController.text);
                 },
                 buttonText: 'Sign in',
